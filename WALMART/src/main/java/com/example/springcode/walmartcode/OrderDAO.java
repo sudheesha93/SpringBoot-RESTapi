@@ -4,36 +4,33 @@ package com.example.springcode.walmartcode;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+
+import com.example.springcode.walmartcode.OrderEntity.OrderStatus;
 
 
 
 
 @Repository
-public class StudentDAO {
-	
-	private EntityManager em;
+public class OrderDAO {
 	
 	
 	@Autowired
-	public StudentDAO(EntityManager em) {
+	private OrderRepository orderRepo;
+	
+	private EntityManager em;
+	 
+	@Autowired
+	public OrderDAO(EntityManager em) {
 		this.em = em;
-	}
-
-	// STUDENT LIST
-	@Transactional
-	public List<Student> getAllStudents() {
-		
-		Session currentSession =  em.unwrap(Session.class);
-		Query<Student> theQuery= currentSession.createQuery("from Student", Student.class);
-		List<Student> list= theQuery.getResultList();
-		return list;
 	}
 
 	// ORDER LIST
@@ -84,15 +81,14 @@ public class StudentDAO {
 	}
 
 	@Transactional
-	public int updateOrder(int ordId) {
+	public void updateOrder(int ordId) {
 		
 		Session currentSession =  em.unwrap(Session.class);
-		Query<OrderEntity> theQuery= currentSession.createQuery("update OrderEntity set status =:st where order_id=:id", 
-									OrderEntity.class);
-		theQuery.setParameter("st", "Close");
-		theQuery.setParameter("id",ordId);
-		int result=theQuery.executeUpdate();
-		return result;
+
+		OrderEntity oe=currentSession.load(OrderEntity.class,ordId);
+
+		oe.setStatus(OrderStatus.Close);
+		currentSession.update(oe);
 		
 	
 	}
@@ -103,7 +99,7 @@ public class StudentDAO {
 		Session currentSession =  em.unwrap(Session.class);
 		int orderId=item.getItemid();
 		
-		Query theQuery= currentSession.createQuery("select oe.status from OrderEntity as oe where oe.order_id=: id", OrderEntity.class);
+		Query theQuery= currentSession.createQuery("select status from OrderEntity where order_id=: id", OrderEntity.class);
 		
 		theQuery.setParameter("id",orderId);
 		

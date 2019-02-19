@@ -1,10 +1,13 @@
 package com.example.springcode.walmartcode;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,20 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
 	
 	
-	private StudentDAO dao;
+	private OrderDAO dao;
 	
 	@Autowired
-	public Controller(StudentDAO dao) {
+	public Controller(OrderDAO dao) {
 		super();
 		this.dao = dao;
 	}
-
-	// getting the studnet list
-	@GetMapping("/studentlist")
-	public List<Student> getAllStudents(){
-		return dao.getAllStudents();
-		
-	}
+	
 	
 	// getting the supplier list
 	@GetMapping("/supplist")
@@ -55,21 +54,25 @@ public class Controller {
 		
 	}
 	
-	
-	@PostMapping("/supp/{id}")
-	public void createOrder(@PathVariable(value="id") int suppId, 
+	// Creating an order for the supplier
+	@RequestMapping(value = "/supp/{id}", method = RequestMethod.POST)
+	public void createOrder(@PathVariable final int id, 
 			@RequestBody OrderEntity order) {
-		dao.createOrder(suppId, order);
+		dao.createOrder(id, order);
 		
 	}
 
+	// updating the status of the order
 	@PutMapping("/order/{id}")
-	public int updateOrder(@PathVariable(value="id") int ordId) {	
-		return dao.updateOrder(ordId);
+	public void updateOrder(@PathVariable final int id) {	
+		dao.updateOrder(id);
 	}
 	
-	@PutMapping
+	// Add/modify the item for the open orders
+	@PutMapping("/item")
 	public void saveOrUpdate(@RequestBody OrderItemEntity item) {
 		dao.saveOrUpdate(item);
 	}
+	
+	
 }
