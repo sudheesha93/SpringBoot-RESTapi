@@ -15,7 +15,6 @@ import com.example.springcode.walmartcode.entity.OrderEntity;
 import com.example.springcode.walmartcode.entity.OrderStatus;
 import com.example.springcode.walmartcode.entity.OrderItemEntity;
 import com.example.springcode.walmartcode.entity.Supplier;
-import com.example.springcode.walmartcode.exception.DataNotFoundException;
 import com.example.springcode.walmartcode.repository.OrderRepository;
 
 
@@ -145,6 +144,7 @@ public class OrderDAO {
 		
 		System.out.println("Order id: "+ item.getOrderId().getId());
 		try {
+			
 			Query theQuery= currentSession.createQuery("select status from OrderEntity where order_id=: id");
 			theQuery.setParameter("id",orderId);
 			OrderStatus s= (OrderStatus) theQuery.uniqueResult();
@@ -164,10 +164,4 @@ public class OrderDAO {
 
 	
 	}
-
-
-	 
-	
-	
-
 
