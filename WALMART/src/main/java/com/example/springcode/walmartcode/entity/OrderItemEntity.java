@@ -1,4 +1,4 @@
-package com.example.springcode.walmartcode;
+package com.example.springcode.walmartcode.entity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,13 +30,13 @@ public class OrderItemEntity {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="status")
-	private ITEMSTATUS status;
-	enum ITEMSTATUS {Yes, No}
+	public ItemStatus status;
+	
 	
 	public OrderItemEntity() {
 		
 	}
-	public OrderItemEntity(int itemid, OrderEntity orderId, double amount, ITEMSTATUS status) {
+	public OrderItemEntity(int itemid, OrderEntity orderId, double amount, ItemStatus status) {
 		super();
 		this.itemid = itemid;
 		this.orderId = orderId;
@@ -61,10 +61,10 @@ public class OrderItemEntity {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	public ITEMSTATUS getStatus() {
+	public ItemStatus getStatus() {
 		return status;
 	}
-	public void setStatus(ITEMSTATUS status) {
+	public void setStatus(ItemStatus status) {
 		this.status = status;
 	}
 	

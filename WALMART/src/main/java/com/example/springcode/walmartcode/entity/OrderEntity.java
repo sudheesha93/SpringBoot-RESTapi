@@ -1,4 +1,4 @@
-package com.example.springcode.walmartcode;
+package com.example.springcode.walmartcode.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,10 +39,7 @@ public class OrderEntity {
 	@Column(name="status",length=8)
 	private OrderStatus status;
 	
-	enum OrderStatus{
-		Open,
-		Close
-	}
+	
 		
 	
 	public OrderEntity() {

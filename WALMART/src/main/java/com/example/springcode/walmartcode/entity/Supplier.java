@@ -1,4 +1,4 @@
-package com.example.springcode.walmartcode;
+package com.example.springcode.walmartcode.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="supplier")
-public class Supplier {
+public class Supplier{
 	
 	@Id
 	@Column(name="suuplier_id")
@@ -25,9 +25,8 @@ public class Supplier {
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="active_IND")
-	private ACTIVESTATUS status;
+	private ActiveStatus status;
 	
-	enum ACTIVESTATUS{Yes, No;}
 	
 	
 	
@@ -35,7 +34,7 @@ public class Supplier {
 		
 	}
 
-	public Supplier(int id, String name, ACTIVESTATUS status) {
+	public Supplier(int id, String name, ActiveStatus status) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -60,11 +59,11 @@ public class Supplier {
 		this.name = name;
 	}
 
-	public ACTIVESTATUS getStatus() {
+	public ActiveStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(ACTIVESTATUS status) {
+	public void setStatus(ActiveStatus status) {
 		this.status = status;
 	}
 	
