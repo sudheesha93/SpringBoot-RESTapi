@@ -1,6 +1,7 @@
  package com.example.springcode.walmartcode.DAO;
 
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,113 +33,132 @@ public class OrderDAO {
 		this.em = em;
 	}
 
-	
+		
 	// ORDER LIST
 	@Transactional
-	public List<OrderEntity> getAllOrders(){
+	public List<OrderEntity> getAllOrders() throws SQLException{
 		
 	Session currentSession =  em.unwrap(Session.class);
+	List<OrderEntity> list;
+	try {
+		Query theQuery= currentSession.createQuery("from OrderEntity", OrderEntity.class);
+		list=theQuery.getResultList();
+		
+	}
+	catch(Exception ex) {
+		throw new SQLException("SQL exception in creating an order");
+	}
 	
-	Query theQuery= currentSession.createQuery("from OrderEntity", OrderEntity.class);
-	List<OrderEntity> list=theQuery.getResultList();
-		return list;
+	return list;
 		
 		
 	}
 
 	// SUPPLIER LIST
 	@Transactional
-	public List<Supplier> getAllSupplier(){
+	public List<Supplier> getAllSupplier() throws SQLException{
 		
 		Session currentSession =  em.unwrap(Session.class);
-		List<Supplier> list= new ArrayList<>();
+		List<Supplier> list;
 		
+		try {
 			Query theQuery= currentSession.createQuery("from Supplier", Supplier.class);
 			list= theQuery.getResultList();
-	
+			
+		}
+		catch(Exception ex) {
+			throw new SQLException("SQL exception in creating an order");
+		}
 		
 		return list;
+		
 	}
 
 	// ITEMS  LIST
 	@Transactional
-	public List<OrderItemEntity> getAllItems(){
+	public List<OrderItemEntity> getAllItems() throws SQLException{
 		
 		Session currentSession =  em.unwrap(Session.class);
 		List<OrderItemEntity> list= new ArrayList<>();
 		
+		try {
 			Query<OrderItemEntity> theQuery= currentSession.createQuery("from OrderItemEntity", OrderItemEntity.class);
 			list= theQuery.getResultList();
-
-		return list;
+			
+		}
+		catch(Exception ex) {
+			throw new SQLException("SQL exception in creating an order");
+		}
 		
+		return list;
+
 	}
 
 	
 	// CREATING AN ORDER FOR A GIVEN SUPPLIER
 	@Transactional
-	public void createOrder(int suppId, OrderEntity order){
-		
+	public void createOrder(int suppId, OrderEntity order) throws SQLException{
 		Session currentSession =  em.unwrap(Session.class);
-	
-			OrderEntity oe=new OrderEntity();
-			oe.setId(order.getId());
-			oe.setOrderDate(order.getOrderDate());
-			oe.setAmount(order.getAmount());
-			oe.setSupplier(order.getSupplier());
-			oe.setStatus(order.getStatus());
-			currentSession.save(oe);
+	try {
+		OrderEntity oe=new OrderEntity();
+		oe.setId(order.getId());
+		oe.setOrderDate(order.getOrderDate());
+		oe.setAmount(order.getAmount());
+		oe.setSupplier(order.getSupplier());
+		oe.setStatus(order.getStatus());
+		currentSession.save(oe);
+	}
+	catch(Exception ex) {
+		throw new SQLException("SQL exception in creating an order");
+	}
+		
 		
 	}
 
 	
 	// UPDATING THE STATUS OF THE PARTICULAR ORDER
 	@Transactional
-	public void updateOrder(int ordId){
-		
-		Session currentSession =  em.unwrap(Session.class);
-		OrderEntity oe=currentSession.load(OrderEntity.class,ordId);
-		System.out.println("Sudheesha : "+ oe);
-		oe.setStatus(OrderStatus.Open);
-		currentSession.update(oe);
+	public void updateOrder(int ordId) throws SQLException{
+
+		try {
+			Session currentSession =  em.unwrap(Session.class);
+			OrderEntity oe=currentSession.load(OrderEntity.class,ordId);
+			System.out.println("Sudheesha : "+ oe);
+			oe.setStatus(OrderStatus.Open);
+			currentSession.update(oe);
+		}
+		catch(Exception ex) {
+			throw new SQLException("SQL exception in creating an order");
+		}
 		
 	}
 
 	
 	// ADD/MODIFY THE ITEM ORDER IF THE ORDER STATUS IS OPEN
 	@Transactional
-	public void saveOrUpdate(OrderItemEntity item){
-
+	public void saveOrUpdate(OrderItemEntity item) throws SQLException{
+		
 		Session currentSession =  em.unwrap(Session.class);
-		
 		int orderId=item.getOrderId().getId();
-		
-		Query theQuery= currentSession.createQuery("select status from OrderEntity where order_id=: id");
-		theQuery.setParameter("id",orderId);
-		
-		OrderStatus s= (OrderStatus) theQuery.uniqueResult();
-
-		
-		if(s.toString().equalsIgnoreCase("open")){
-			currentSession.saveOrUpdate(item);
+		try {
+			Query theQuery= currentSession.createQuery("select status from OrderEntity where order_id=: id");
+			theQuery.setParameter("id",orderId);
+			OrderStatus s= (OrderStatus) theQuery.uniqueResult();
+			
+			if(s.toString().equalsIgnoreCase("open")){
+				currentSession.saveOrUpdate(item);
+			}
+			else {
+				throw new SQLException("Oder Status for the given ID is Close");
+			}
 		}
-		else {
-			System.out.println("status is not open");
-		}
-		
+		catch(Exception ex) {
+			throw new SQLException("SQL exception in creating an order");
+		}	
 			
 	}
 
-	@Transactional
-	public void getOrderById(int id) throws DataNotFoundException{
-		
-		try {
-			
-		}
-		catch(Exception e) {
-			
-		}
-		
+	
 	}
 
 
@@ -146,4 +166,4 @@ public class OrderDAO {
 	
 	
 
-}
+
