@@ -140,6 +140,10 @@ public class OrderDAO {
 		
 		Session currentSession =  em.unwrap(Session.class);
 		int orderId=item.getOrderId().getId();
+		
+		System.out.println("item id: "+ item.getItemid());
+		
+		System.out.println("Order id: "+ item.getOrderId().getId());
 		try {
 			Query theQuery= currentSession.createQuery("select status from OrderEntity where order_id=: id");
 			theQuery.setParameter("id",orderId);
@@ -149,11 +153,11 @@ public class OrderDAO {
 				currentSession.saveOrUpdate(item);
 			}
 			else {
-				throw new SQLException("Oder Status for the given ID is Close");
+				throw new SQLException("Order Status for the given ID is Close");
 			}
 		}
 		catch(Exception ex) {
-			throw new SQLException("SQL exception in creating an order");
+			throw new SQLException(ex.getMessage());
 		}	
 			
 	}
